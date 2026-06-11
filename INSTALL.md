@@ -21,7 +21,7 @@ To clear this system quarantine flag:
 1. Open your **Terminal** app (search for it in Spotlight).
 2. Copy and paste the following command, then press Enter:
    ```bash
-   xattr -cr /Applications/KeyLock.app
+   xattr -cr /Applications/KeyLock-Apple-Silicon/KeyLock.app
    ```
 3. You can now double-click **KeyLock** in your Applications folder to launch it.
 
