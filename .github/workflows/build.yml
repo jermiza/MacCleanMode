@@ -1,0 +1,44 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Publish Release
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build Application (Apple Silicon)
+        run: |
+          xcodebuild -project KeyLock.xcodeproj \
+                     -scheme KeyLock \
+                     -configuration Release \
+                     -destination 'generic/platform=macOS' \
+                     ARCHS=arm64 \
+                     CODE_SIGN_IDENTITY="-" \
+                     SYMROOT=build \
+                     clean build
+
+      - name: Prepare Release Package
+        run: |
+          cd build/Release
+          zip -r ../../KeyLock-Apple-Silicon.zip KeyLock.app
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: KeyLock-Apple-Silicon.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
