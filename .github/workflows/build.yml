@@ -30,8 +30,9 @@ jobs:
 
       - name: Prepare Release Package
         run: |
+          cp README.txt build/Release/
           cd build/Release
-          zip -r ../../KeyLock-Apple-Silicon.zip KeyLock.app
+          zip -r ../../KeyLock-Apple-Silicon.zip KeyLock.app README.txt
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
